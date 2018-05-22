@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+## Server Testing
+  server_1:
+    image: httpd_snmp
+    container_name: sisjar_server_1
+    volumes:
+      - ./snmpd.conf:/etc/snmp/snmpd.conf
+    ports:
+      - "31331:80"
+
+## Network Interface
+networks:
+  default:
+    external:
+      name: monitoring

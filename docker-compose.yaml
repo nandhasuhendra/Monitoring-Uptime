@@ -1,0 +1,35 @@
+version: '2'
+
+services:
+## Applications for monitoring device
+  influxdb:
+    image: influxdb
+    container_name: sisjar_influxdb
+    volumes:
+      - ./influxdb.conf:/etc/influxdb/influxdb.conf
+      - ./influxdb/data:/var/lib/influxdb
+    ports:
+      - "8086"
+
+  telegraf:
+    image: telegraf_mib
+    container_name: sisjar_telegraf
+    links:
+      - influxdb
+    volumes:
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf
+      - ./snmp.conf:/etc/snmp/snmp.conf
+
+  grafana:
+    image: grafana/grafana
+    container_name: sisjar_grafana
+    links:
+      - influxdb
+    ports:
+      - "3000:3000"
+
+## Network Interface
+networks:
+  default:
+    external:
+      name: monitoring
